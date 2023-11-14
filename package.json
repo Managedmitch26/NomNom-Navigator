@@ -2,10 +2,11 @@
   "name": "nomnom-navigator",
   "version": "1.0.0",
   "description": "",
-  "main": "config.js",
+  "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "start": "nodemon server/index.js -w server",
-    "create-db": "psql postgres < server/db.sql",
+    "create-db": "psql nomnom < server/NomNom.sql",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
