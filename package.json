@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon server/index.js -w server",
+    "start": "nodemon server/utils/index.js -w server",
     "create-db": "psql nomnom < server/NomNom.sql",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

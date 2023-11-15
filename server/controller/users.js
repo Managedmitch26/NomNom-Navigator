@@ -3,24 +3,25 @@ import pool from "../utils/NomNom.js";
 const controller = {
     users: {
         getOneUser: async (req, res) => {
+            const user_id = req.params.id;
             try {
-                const result = pool.query('SELECT * FROM users WHERE user_id = $1',
-                [user_id]);
+                const result = await pool.query('SELECT * FROM users WHERE user_id = $1', [user_id]);
 
                 if (result.rows.length === 0) {
-                    res.status(404).json({error: "User Not Found"})
+                    res.status(404).json({ error: "User Not Found" });
                 } else {
                     res.json(result.rows[0]);
                 }
-            }  catch (err) {
+            } catch (err) {
                 console.error(err);
-                res.status(500).send('Internal Server Error')
+                res.status(500).send('Internal Server Error');
             }
         },
 
         getAllUsers: async (req, res) => {
+
             try {
-                const result = pool.query('SELECT * FROM users ORDERED BY user_id ASC')
+                const result = await pool.query('SELECT * FROM users ORDER BY user_id ASC')
                 res.json(result.rows)
             }  catch (err) {
                 console.error(err);
@@ -29,6 +30,7 @@ const controller = {
         },
 
         addUsers: async (req, res) => {
+            const {user_id, username, email, zip, hashed_password} = req.body
             try {
                 const result = await pool.query(
                     'INSERT INTO users (user_id, username, email, zip, hashed_password) VALUES ($1, $2, $3, $4, $5) RETURNING *',
@@ -49,6 +51,8 @@ const controller = {
         },
 
         updateUsers: async (req, res) => {
+            const {user_id, username, email, zip, hashed_password} = req.body
+
             try {
                 const result = await pool.query(
                 'UPDATE users (user_id, username, email, zip, hashed_password) VALUES ($1, $2, $3, $4, $5) WHERE user_id = $1',
@@ -63,6 +67,7 @@ const controller = {
         },
 
         deleteUsers: async (req, res) => {
+            const user_id = req.params.id
             try {
                 const result = await pool.query(
                 'DELETE FROM users WHERE user_id = $1',

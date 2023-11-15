@@ -1,5 +1,5 @@
 import express from 'express';
-import userRouter from '../routes/userRoutes';
+import userRouter from '../routes/userRoutes.js';
 import cors from 'cors';
 import favRouter from '../routes/favRoutes.js';
 
@@ -9,7 +9,7 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
-app.use('/user', userRouter);
+app.use('/api/users', userRouter);
 
 app.use('/api/favorites', favRouter)
 
