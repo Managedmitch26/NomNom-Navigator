@@ -1,31 +1,86 @@
-import pool from '../NomNom.js';
+import pool from "../utils/NomNom.js";
 
 const controller = {
     users: {
-        getUsers: (req, res) => {
-            pool.query(
-                `SELECT
-                    json_build_object(
-                     'user_id', users.user_id,
-                     'username', users.username,
-                     'email', users.email,
-                     'zip', users.zip,
-                     'hashed_password', users.hashed_password,
+        getOneUser: async (req, res) => {
+            try {
+                const result = pool.query('SELECT * FROM users WHERE user_id = $1',
+                [user_id]);
+
+                if (result.rows.length === 0) {
+                    res.status(404).json({error: "User Not Found"})
+                } else {
+                    res.json(result.rows[0]);
+                }
+            }  catch (err) {
+                console.error(err);
+                res.status(500).send('Internal Server Error')
+            }
+        },
+
+        getAllUsers: async (req, res) => {
+            try {
+                const result = pool.query('SELECT * FROM users ORDERED BY user_id ASC')
+                res.json(result.rows)
+            }  catch (err) {
+                console.error(err);
+                res.status(500).send('Internal Server Error')
+            }
+        },
+
+        addUsers: async (req, res) => {
+            try {
+                const result = await pool.query(
+                    'INSERT INTO users (user_id, username, email, zip, hashed_password) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+                    [user_id, username, email, zip, hashed_password],
                     )
-                `
-            )
+
+                    res.json(result.rows[0])
+
+                    if (result.rows[0].length !== 0) {
+                        res.status(200).send('User Successfully Created')
+                    } else {
+                        res.status(400).send('User unable to be created')
+                       }
+            }  catch (err) {
+                console.error(err);
+                res.status(500).send('Internal Server Error')
+            }
         },
 
-        addUsers: (req, res) => {
+        updateUsers: async (req, res) => {
+            try {
+                const result = await pool.query(
+                'UPDATE users (user_id, username, email, zip, hashed_password) VALUES ($1, $2, $3, $4, $5) WHERE user_id = $1',
+                [user_id, username, email, zip, hashed_password],
+                )
 
+                res.json(result.rows[0])
+            } catch (err) {
+                console.error(err);
+                res.status(500).send('Internal Server Error')
+            }
         },
 
-        updateUsers: (req, res) => {
+        deleteUsers: async (req, res) => {
+            try {
+                const result = await pool.query(
+                'DELETE FROM users WHERE user_id = $1',
+                [user_id],
+                )
 
-        },
+                if (result.rows[0].length !== 0) {
+                    res.status(200).send('User Successfully Deleted')
+                } else {
+                    res.status(404).send('User Not Located')
+                   }
 
-        deleteUsers: (req, res) => {
-
+            } catch (err) {
+                console.error(err);
+                res.status(500).send('Internal Server Error')
+            }
         }
     }
 }
+
+export default controller;
