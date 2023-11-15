@@ -1,9 +1,10 @@
 import pkg from 'pg';
+import user from '../../config';
 const { Pool } = pkg;
 
 const pool = new Pool({
     host: "localhost",
-    user: "mitchellwong",
+    user: user,
     password: "password",
     database: "nomnom",
     port: 5432,
