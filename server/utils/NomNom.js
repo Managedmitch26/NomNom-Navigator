@@ -1,5 +1,5 @@
 import pkg from 'pg';
-import user from '../../config';
+import user from '../../config2';
 const { Pool } = pkg;
 
 const pool = new Pool({
