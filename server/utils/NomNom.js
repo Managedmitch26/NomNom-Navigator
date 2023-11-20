@@ -1,6 +1,6 @@
 import pkg from 'pg';
 const { Pool } = pkg;
-import user from '../../config2';
+import user from '../../config2.js';
 
 const pool = new Pool({
     host: "localhost",
