@@ -30,41 +30,44 @@ const controller = {
         },
 
         addUsers: async (req, res) => {
-            const {user_id, username, email, zip, hashed_password} = req.body
-            try {
-                const result = await pool.query(
-                    'INSERT INTO users (user_id, username, email, zip, hashed_password) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-                    [user_id, username, email, zip, hashed_password],
-                    )
-
-                    res.json(result.rows[0])
-
-                    if (result.rows[0].length !== 0) {
-                        res.status(200).send('User Successfully Created')
-                    } else {
-                        res.status(400).send('User unable to be created')
-                       }
-            }  catch (err) {
-                console.error(err);
-                res.status(500).send('Internal Server Error')
-            }
-        },
-
-        updateUsers: async (req, res) => {
-            const {user_id, username, email, zip, hashed_password} = req.body
+            const { username, email, zip, hashed_password } = req.body;
 
             try {
-                const result = await pool.query(
-                'UPDATE users (user_id, username, email, zip, hashed_password) VALUES ($1, $2, $3, $4, $5) WHERE user_id = $1',
-                [user_id, username, email, zip, hashed_password],
-                )
+              const result = await pool.query(
+                'INSERT INTO users (username, email, zip, hashed_password) VALUES ($1, $2, $3, $4) RETURNING *',
+                [username, email, zip, hashed_password]
+              );
 
-                res.json(result.rows[0])
+              if (result.rows.length !== 0) {
+                const newUser = result.rows[0];
+                const userId = newUser.user_id; // Access the user ID
+
+                res.status(201).json({ message: 'User successfully created', user: newUser, userId });
+              } else {
+                res.status(400).send('User unable to be created');
+              }
             } catch (err) {
-                console.error(err);
-                res.status(500).send('Internal Server Error')
+              console.error(err);
+              res.status(500).send('Internal Server Error');
             }
-        },
+          },
+
+
+          updateUsers: async (req, res) => {
+            const { user_id, username, email, zip, hashed_password } = req.body;
+
+            try {
+              const result = await pool.query(
+                'UPDATE users SET username = $2, email = $3, zip = $4, hashed_password = $5 WHERE user_id = $1',
+                [user_id, username, email, zip, hashed_password]
+              );
+
+              res.json({ message: "User was successfully updated"});
+            } catch (err) {
+              console.error(err);
+              res.status(500).send('Internal Server Error');
+            }
+          },
 
         deleteUsers: async (req, res) => {
             const user_id = req.params.id
@@ -74,7 +77,7 @@ const controller = {
                 [user_id],
                 )
 
-                if (result.rows[0].length !== 0) {
+                if (result.rowCount !== 0) {
                     res.status(200).send('User Successfully Deleted')
                 } else {
                     res.status(404).send('User Not Located')
