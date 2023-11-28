@@ -1,4 +1,5 @@
 import pool from "../utils/NomNom.js";
+import bcrypt from 'bcrypt';
 
 const controller = {
     users: {
@@ -31,11 +32,12 @@ const controller = {
 
         addUsers: async (req, res) => {
             const { username, email, zip, hashed_password } = req.body;
+            const hashedPassword = await bcrypt.hash(hashed_password, 10);
 
             try {
               const result = await pool.query(
                 'INSERT INTO users (username, email, zip, hashed_password) VALUES ($1, $2, $3, $4) RETURNING *',
-                [username, email, zip, hashed_password]
+                [username, email, zip, hashedPassword]
               );
 
               if (result.rows.length !== 0) {
@@ -87,6 +89,25 @@ const controller = {
                 console.error(err);
                 res.status(500).send('Internal Server Error')
             }
+        },
+
+        loginUser: async (req, res) => {
+            const { email, hashed_password } = req.body;
+
+            try {
+                const result = await pool.query(
+                  'SELECT * FROM users WHERE email = $1', [email]
+                  );
+                const user = result.rows[0]
+                if (await bcrypt.compare(hashed_password, user.hashed_password)) {
+                    res.send('Success')
+                } else (
+                    res.status(401).send('Incorrect login credentials')
+                )
+              } catch (err) {
+                console.error(err);
+                res.status(500).send('Internal Server Error');
+              }
         }
     }
 }
