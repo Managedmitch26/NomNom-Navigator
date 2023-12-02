@@ -4,6 +4,7 @@ export const createFavorite = async (req, res) => {
     const { user_id, bus_id, bus_name, bus_image, bus_rating, bus_price, bus_address, bus_phone } = req.body;
 
     try {
+
         const result = await pool.query(
             'INSERT INTO favorites (user_id, bus_id, bus_name, bus_image, bus_rating, bus_price, bus_address, bus_phone) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
             [user_id, bus_id, bus_name, bus_image, bus_rating, bus_price, bus_address, bus_phone]
@@ -35,7 +36,8 @@ export const getFavoriteById = async (req, res) => {
 
 export const getAllFavorites = async (req, res) => {
     try {
-      const result = await pool.query('SELECT * FROM favorites');
+      const userId = req.user.id
+      const result = await pool.query('SELECT * FROM favorites WHERE user_id = $1', [userId]);
 
       res.json(result.rows);
     } catch (error) {

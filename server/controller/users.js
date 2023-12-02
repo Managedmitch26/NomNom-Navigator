@@ -1,5 +1,9 @@
+import dotenv from "dotenv";
+dotenv.config()
 import pool from "../utils/NomNom.js";
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+
 
 const controller = {
     users: {
@@ -92,23 +96,35 @@ const controller = {
         },
 
         loginUser: async (req, res) => {
-            const { email, hashed_password } = req.body;
+          const { email, password } = req.body;
 
-            try {
-                const result = await pool.query(
-                  'SELECT * FROM users WHERE email = $1', [email]
-                  );
-                const user = result.rows[0]
-                if (await bcrypt.compare(hashed_password, user.hashed_password)) {
-                    res.send('Success')
-                } else (
-                    res.status(401).send('Incorrect login credentials')
-                )
-              } catch (err) {
-                console.error(err);
-                res.status(500).send('Internal Server Error');
+          try {
+            const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+            const user = result.rows[0];
+
+            if (user) {
+              // If a user with the given email is found
+              const isPasswordMatch = await bcrypt.compare(password, user.hashed_password);
+
+              if (isPasswordMatch) {
+                const accessToken = jwt.sign({ id: user.user_id, email: user.email }, process.env.SECRET_TOKEN);
+                res.json({ accessToken: accessToken, message: 'Success' });
+              } else {
+                // Passwords do not match
+                res.status(401).send('Incorrect login credentials');
               }
-        }
+            } else {
+              // No user found with the given email
+              res.status(401).send('User not found');
+            }
+          } catch (err) {
+            console.error(err);
+            res.status(500).send('Internal Server Error');
+          }
+        },
+
+
+
     }
 }
 
