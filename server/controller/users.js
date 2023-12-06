@@ -1,5 +1,8 @@
 import pool from "../utils/NomNom.js";
 import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
+import dotenv from 'dotenv';
+dotenv.config()
 
 const controller = {
     users: {
@@ -100,7 +103,9 @@ const controller = {
                   );
                 const user = result.rows[0]
                 if (await bcrypt.compare(hashed_password, user.hashed_password)) {
-                    res.send('Success')
+                    const accessToken = jwt.sign({userId: user.user_id, email: user.email}, process.env.SECRET_TOKEN)
+                    res.json({ accessToken: accessToken, Message: 'Success' })
+
                 } else (
                     res.status(401).send('Incorrect login credentials')
                 )
