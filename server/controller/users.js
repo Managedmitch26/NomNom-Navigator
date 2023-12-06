@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config()
 import pool from "../utils/NomNom.js";
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
@@ -95,7 +97,7 @@ const controller = {
         },
 
         loginUser: async (req, res) => {
-            const { email, hashed_password } = req.body;
+          const { email, password } = req.body;
 
             try {
                 const result = await pool.query(
