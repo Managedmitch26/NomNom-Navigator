@@ -3,8 +3,6 @@ dotenv.config()
 import pool from "../utils/NomNom.js";
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
-import dotenv from 'dotenv';
-dotenv.config()
 
 const controller = {
     users: {
@@ -25,7 +23,6 @@ const controller = {
         },
 
         getAllUsers: async (req, res) => {
-
             try {
                 const result = await pool.query('SELECT * FROM users ORDER BY user_id ASC')
                 res.json(result.rows)
