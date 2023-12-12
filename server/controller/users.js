@@ -94,7 +94,7 @@ const controller = {
         },
 
         loginUser: async (req, res) => {
-          const { email, password } = req.body;
+          const { email, hashed_password } = req.body;
 
             try {
                 const result = await pool.query(

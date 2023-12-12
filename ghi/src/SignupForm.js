@@ -35,7 +35,6 @@ const SignupForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         submitSignup();
-        console.log(hashedPassword)
     };
 
     return (
@@ -72,7 +71,7 @@ const SignupForm = () => {
                 <div>
                     <label>Password</label>
                     <input
-                    type="hashedPassword"
+                    type="password"
                     placeholder="Password"
                     value={hashedPassword} onChange={(e) => setHashedPassword(e.target.value)}
                     required
