@@ -32,7 +32,7 @@ const controller = {
             }
         },
 
-        addUsers: async (req, res) => {
+        addUsers: async (req, res, next) => {
             const { username, email, zip, hashed_password } = req.body;
             const hashedPassword = await bcrypt.hash(hashed_password, 10);
 
@@ -46,7 +46,7 @@ const controller = {
                 const newUser = result.rows[0];
                 const userId = newUser.user_id; // Access the user ID
 
-                res.status(201).json({ message: 'User successfully created', user: newUser, userId });
+                next()
               } else {
                 res.status(400).send('User unable to be created');
               }
