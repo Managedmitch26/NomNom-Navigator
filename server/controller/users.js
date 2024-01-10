@@ -103,10 +103,13 @@ const controller = {
                 const user = result.rows[0]
                 if (await bcrypt.compare(hashed_password, user.hashed_password)) {
                     const accessToken = jwt.sign(
-                      {userId: user.user_id, email: user.email},
+                      {userId: user.user_id, email: user.emails, zip: user.zip},
                       process.env.SECRET_TOKEN,
                       { expiresIn: '1h' }
                       )
+                    res.cookie("token", accessToken, {
+                      httpOnly: true,
+                    })
                     res.json({ accessToken: accessToken, Message: 'Success' })
 
                 } else (
