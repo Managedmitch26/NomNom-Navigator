@@ -11,7 +11,8 @@ const LoginForm = () => {
                 email: email,
                 hashed_password: hashedPassword,
             }),
-            headers: {"Content-Type": "application/json"},
+            credentials: "include",
+            headers: {"Content-Type": "application/json"}
         };
 
         const response = await fetch(

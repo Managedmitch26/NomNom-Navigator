@@ -21,7 +21,8 @@ const CategoryPage = () => {
                 price: price,
                 category: category
             }),
-            headers: {"Content-Type": 'application/json'},
+            credentials: "include",
+            headers: {"Content-Type": 'application/json'}
         };
 
         const response = await fetch(

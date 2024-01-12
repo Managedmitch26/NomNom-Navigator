@@ -107,10 +107,12 @@ const controller = {
                       process.env.SECRET_TOKEN,
                       { expiresIn: '1h' }
                       )
-                    res.cookie("token", accessToken, {
+                    res.status(200).cookie("token", accessToken, {
+                      expires: new Date(Date.now() + 3600000),
                       httpOnly: true,
                     })
-                    res.json({ accessToken: accessToken, Message: 'Success' })
+
+                    res.status(200).send({ Message: 'Success' })
 
                 } else (
                     res.status(401).send('Incorrect login credentials')
