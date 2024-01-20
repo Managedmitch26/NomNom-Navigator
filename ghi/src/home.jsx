@@ -7,11 +7,15 @@ const HomePage = () => {
     const navigate = useNavigate();
 
     function categoryButton(e) {
-        e.preventDefault();
+        // e.preventDefault();
         setFoodType(e.target.value);
-        console.log(foodType);
-        // navigate(`/category/${foodType}`)
     }
+
+    useEffect(() => {
+        if (foodType !== "") {
+            navigate(`/category/${foodType}`);
+        }
+    }, [foodType, navigate]);
 
 
 

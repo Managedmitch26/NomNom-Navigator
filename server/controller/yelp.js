@@ -17,7 +17,7 @@ export const fetchCategory = async (req, res) => {
                 location: location,
                 radius: radius,
                 categories: category,
-                price: price ? price !== null : '1,2,3,4',
+                price: price,
                 sort_by: 'best_match',
             }
         },
