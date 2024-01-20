@@ -1,25 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 
-const CategoryPage = () => {
+function ItalianPage() {
     const [radius, setRadius] = useState("");
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("");
-    // const [busID, setBusId] = useState("");
-    // const [busName, setBusName] = useState("");
-    // const [busImage, setBusImage] = useState("");
-    // const [busRating, setBusRating] = useState("");
-    // const [busPrice, setBusPrice] = useState("");
-    // const [busAddress, setBusAddress] = useState("");
-    // const [busPhone, setBusPhone] = useState("");
-    // const [tags, setTags] = useState([]);
+    const [restaurants, setRestaurants] = useState({});
+    const [foodType, setFoodType] = useState()
 
-    const sumbitSearch = async (e) => {
+    const submitSearch = async () => {
         const fetchConfig = {
             method: "post",
             body: JSON.stringify({
                 radius: radius,
                 price: price,
-                category: category
+                category: 'italian'
             }),
             credentials: "include",
             headers: {"Content-Type": 'application/json'}
@@ -32,17 +26,27 @@ const CategoryPage = () => {
 
         if (response.ok) {
             const categoryInfo = await response.json();
-            console.log(categoryInfo);
+            setRestaurants(categoryInfo);
+            console.log(categoryInfo)
         } else {
             console.log("Unable to fetch information")
         }
+        console.log(category)
     }
+
+    // useEffect(() => {
+    //     submitSearch();
+    // }, [foodType])
+
+
+
 
 
     return(
-        <button onClick={sumbitSearch}>Submit</button>
+        <button onClick={submitSearch}>Submit</button>
+
     )
 
 }
 
-export default CategoryPage;
+export default ItalianPage;
