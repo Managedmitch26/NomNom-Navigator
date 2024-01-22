@@ -43,6 +43,7 @@ function MexicanPage() {
     }
 
     useEffect(() => {
+        console.log(radius)
         submitSearch();
     }, [])
 
@@ -51,8 +52,11 @@ function MexicanPage() {
     const handlePrice3Change = () => setPrice3(!price3);
     const handlePrice4Change = () => setPrice4(!price4);
 
+    const handleRadiusChange = (e) => setRadius(e.target.value);
+
+
   return (
-    <div>
+    <><div>
       <label>
         Price 1
         <input type="checkbox" checked={price1} onChange={handlePrice1Change} />
@@ -70,8 +74,8 @@ function MexicanPage() {
         <input type="checkbox" checked={price4} onChange={handlePrice4Change} />
       </label>
       <div>
-                <button onClick={submitSearch}>Submit</button>
-        </div>
+        <button onClick={submitSearch}>Submit</button>
+      </div>
 
       <ul>
         {restaurants.businesses?.map((business) => (
@@ -79,14 +83,49 @@ function MexicanPage() {
         ))}
       </ul>
     </div>
+
+    <div>
+          <label>
+            1 mile
+            <input
+            type="radio"
+            value={"1609"}
+            checked={radius === "1609"}
+            onChange={handleRadiusChange}
+            />
+          </label>
+          <label>
+            5 mile
+            <input
+            type="radio"
+            value={"8047"}
+            checked={radius === "8047"}
+            onChange={handleRadiusChange}
+            />
+          </label>
+          <label>
+            15 mile
+            <input
+            type="radio"
+            value={"24140"}
+            checked={radius === "24140"}
+            onChange={handleRadiusChange}
+            />
+          </label>
+          <label>
+            25 mile
+            <input
+            type="radio"
+            value={"40000"}
+            checked={radius === "40000"}
+            onChange={handleRadiusChange}
+            />
+          </label>
+    </div>
+    </>
   );
 
 
 }
 
 export default MexicanPage;
-
-// NEXT STEPS:
-//     ISOLATE INFORMATION COMING IN FROM API CALL
-//     TEST FILTERS TO SEE IF THEY MAKE NEW ACCURATE CALLS
-//     ROUGH DISPLAY OF INFORMATION (TRY FOR TOP 10, AT LEAST ONE)

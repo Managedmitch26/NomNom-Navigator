@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CategoryPage from "./CategorSearches/mexicanSearch";
+import CategoryPage from "./CategorySearches/mexicanSearch";
 
 const HomePage = () => {
     const [foodType, setFoodType] = useState("");
