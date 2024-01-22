@@ -1,26 +1,29 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 function MexicanPage() {
     const [radius, setRadius] = useState("");
-    const [price1, setPrice1] = useState(true);
-    const [price2, setPrice2] = useState(true);
-    const [price3, setPrice3] = useState(true);
-    const [price4, setPrice4] = useState(true);
+    const [prices, setPrices] = useState([]);
     const [restaurants, setRestaurants] = useState({});
 
+    const handlePriceChange = (e) => {
+      const {checked, id} = e.target;
+
+      if (checked) {
+        prices.push(id);
+        console.log("prices length", prices.join(",").length)
+      } else {
+        prices.splice(prices.indexOf(id), 1);
+      }
+      setPrices(prices);
+      console.log("prices", prices.join(","));
+    };
+
     const submitSearch = async () => {
-
-        let selectedPrices = [];
-            if (price1) selectedPrices.push('1');
-            if (price2) selectedPrices.push('2');
-            if (price3) selectedPrices.push('3');
-            if (price4) selectedPrices.push('4');
-
         const fetchConfig = {
             method: "post",
             body: JSON.stringify({
                 radius: radius,
-                price: selectedPrices.join(","),
+                prices: prices.length !== 0  ? prices.join(",") : "1,2,3,4",
                 category: 'mexican'
             }),
             credentials: "include",
@@ -43,14 +46,9 @@ function MexicanPage() {
     }
 
     useEffect(() => {
-        console.log(radius)
+        console.log(prices.length)
         submitSearch();
     }, [])
-
-    const handlePrice1Change = () => setPrice1(!price1);
-    const handlePrice2Change = () => setPrice2(!price2);
-    const handlePrice3Change = () => setPrice3(!price3);
-    const handlePrice4Change = () => setPrice4(!price4);
 
     const handleRadiusChange = (e) => setRadius(e.target.value);
 
@@ -59,19 +57,19 @@ function MexicanPage() {
     <><div>
       <label>
         Price 1
-        <input type="checkbox" checked={price1} onChange={handlePrice1Change} />
+        <input type="checkbox" id="1" onChange={handlePriceChange} />
       </label>
       <label>
         Price 2
-        <input type="checkbox" checked={price2} onChange={handlePrice2Change} />
+        <input type="checkbox" id="2" onChange={handlePriceChange} />
       </label>
       <label>
         Price 3
-        <input type="checkbox" checked={price3} onChange={handlePrice3Change} />
+        <input type="checkbox" id="3" onChange={handlePriceChange} />
       </label>
       <label>
         Price 4
-        <input type="checkbox" checked={price4} onChange={handlePrice4Change} />
+        <input type="checkbox" id="4" onChange={handlePriceChange} />
       </label>
       <div>
         <button onClick={submitSearch}>Submit</button>

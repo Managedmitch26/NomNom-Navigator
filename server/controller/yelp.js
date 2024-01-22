@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const fetchCategory = async (req, res) => {
     try {
-        const {radius, category, price} = req.body;
+        const {radius, category, prices} = req.body;
 
         const url = 'https://api.yelp.com/v3/businesses/search';
         const location = req.user.zip.toString();
@@ -17,7 +17,7 @@ export const fetchCategory = async (req, res) => {
                 location: location,
                 radius: radius,
                 categories: category,
-                price: price,
+                price: prices,
                 sort_by: 'best_match',
             }
         },
