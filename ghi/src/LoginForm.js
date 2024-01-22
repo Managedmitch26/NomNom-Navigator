@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"
 
 const LoginForm = () => {
     const [email, setEmail] = useState("");
     const [hashedPassword, setHashedPassword] = useState("");
-
+    const navigate = useNavigate();
     const submitLogin = async () => {
         const fetchConfig = {
             method: "post",
@@ -23,6 +24,7 @@ const LoginForm = () => {
         if (response.ok) {
             const loginUser = await response.json();
             console.log(loginUser)
+            navigate('/NomNom')
         } else {
             console.log("Unable to login")
         }
